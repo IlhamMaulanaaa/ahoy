@@ -3,22 +3,35 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Task;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
     //
     public function index(){
-        return response()->json([
-            ['id' => '1', 'title' => 'Belajar 1', 'is_done' => false],
-            ['id' => '2', 'title' => 'Belajar 2', 'is_done' => false],
-            ['id' => '3', 'title' => 'Belajar 3', 'is_done' => false],
-        ]);
+        $tasks = Task::all();
+        return response()->json($tasks,200);
     }
 
     public function store(Request $request){
-        return response()->json([
-            'message'=> 'Task Berhasil Dibuat'
-        ],201);
+        $task = Task::create([
+            'title'=> $request->input('title'),
+            'description' => $request->input('description')
+        ]);
+
+        return response()->json($task,201);
+    }
+
+    public function show($id){
+        $task = Task::find($id);
+
+        if(! $task ) {
+            return response()->json([
+                'message'=> 'Task tidak ditemukan'
+            ], 404);
+        }
+
+        return response()->json($task);
     }
 }
