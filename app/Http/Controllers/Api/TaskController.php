@@ -15,12 +15,14 @@ class TaskController extends Controller
     }
 
     public function store(Request $request){
-        $task = Task::create([
-            'title'=> $request->input('title'),
-            'description' => $request->input('description')
+        $validated = $request->validate([
+            'title' => 'required|string|max:225',
+            'description' => 'nullable|string',
         ]);
+        
+        $task = Task::create($validated);
 
-        return response()->json($task,201);
+        return response()->json($task, 201);
     }
 
     public function show($id){
@@ -33,5 +35,41 @@ class TaskController extends Controller
         }
 
         return response()->json($task);
+    }
+
+    public function update(Request $request, $id){
+        $task = Task::find($id);
+
+        if (!$task) {
+            return response()->json([
+                'message' => 'Task tidak ditemukan',
+            ], 404);
+        }
+
+        $validated = $request->validate([
+            'title' => 'sometimes|required|string|max:225',
+            'description' => 'nullable|string',
+            'is_completed' => 'boolean',
+        ]);
+
+        $task->update($validated);
+
+        return response()->json($task);
+    }
+
+    public function destroy($id){
+        $task =  Task::find($id);
+
+        if (!$task){
+            return response()->json([
+                'message' => 'Task tidak ditemukan',
+            ], 404);
+        }
+
+        $task->delete();
+
+        return response()->json([
+            'message' => 'Task berhasil dihapus',
+        ]);
     }
 }
