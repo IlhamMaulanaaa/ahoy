@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\TaskResource;   
 use App\Models\Task;
 use Illuminate\Http\Request;
 
@@ -11,7 +12,10 @@ class TaskController extends Controller
     //
     public function index(){
         $tasks = Task::all();
-        return response()->json($tasks,200);
+        return response()->json([
+            'message' => 'Task berhasil ditampilkan',
+            'data' => TaskResource::collection($tasks)
+        ],200);
     }
 
     public function store(Request $request){
@@ -22,7 +26,10 @@ class TaskController extends Controller
         
         $task = Task::create($validated);
 
-        return response()->json($task, 201);
+        return response()->json([
+            'message' => 'Task berhasil dibuat',
+            'data' => new TaskResource($task)
+        ],201);
     }
 
     public function show($id){
@@ -34,7 +41,10 @@ class TaskController extends Controller
             ], 404);
         }
 
-        return response()->json($task);
+        return response()->json([
+            'message'=> 'Task berhasil ditemukan',
+            'data' => new TaskResource($task)
+        ], 200);
     }
 
     public function update(Request $request, $id){
@@ -54,7 +64,10 @@ class TaskController extends Controller
 
         $task->update($validated);
 
-        return response()->json($task);
+        return response()->json([
+            'message'=> 'Task berhasil diupdate',
+            'data'=> new TaskResource($task)
+        ],200);
     }
 
     public function destroy($id){
