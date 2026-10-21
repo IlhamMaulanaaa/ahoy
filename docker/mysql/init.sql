@@ -1,0 +1,9 @@
+CREATE DATABASE IF NOT EXISTS `task-api` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS `task_api` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS `laravel` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+GRANT ALL PRIVILEGES ON `task-api`.* TO 'root'@'%';
+GRANT ALL PRIVILEGES ON `task_api`.* TO 'root'@'%';
+GRANT ALL PRIVILEGES ON `laravel`.* TO 'root'@'%';
+
+FLUSH PRIVILEGES;
